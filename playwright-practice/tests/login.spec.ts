@@ -36,6 +36,6 @@ test('blocked user login', async ({page}) => {
   
     await expect(loginErrorMessage).toContainText('this user has been locked out');
     
-    await expect(page).not.toHaveURL(/saucedemo.com/,/inventory/);
+    await expect(page).not.toHaveURL(/inventory/);
     } 
 )
