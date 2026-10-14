@@ -1,41 +1,39 @@
 import { test, expect } from '@playwright/test';
 
 test('login to sauce', async ({ page }) => {
-    await page.goto('https://www.saucedemo.com/');
+  await page.goto('https://www.saucedemo.com/');
 
-    await expect(page).toHaveTitle('Swag Labs');
+  await expect(page).toHaveTitle('Swag Labs');
 
-    const loginField = page.getByTestId ('username');
-    
-    await loginField.fill('standard_user');
+  const loginField = page.getByTestId('username');
 
-    await page.getByPlaceholder('Password').fill('secret_sauce');
+  await loginField.fill('standard_user');
 
-    await page.getByRole('button', {name: 'login'}).click();
-    
-    await expect(page).toHaveURL(/inventory/)
-    }
-)
+  await page.getByPlaceholder('Password').fill('secret_sauce');
 
+  await page.getByRole('button', { name: 'login' }).click();
 
-test('blocked user login', async ({page}) => {
+  await expect(page).toHaveURL(/inventory/);
+});
 
-    await page.goto('https://www.saucedemo.com/');
+test('blocked user login', async ({ page }) => {
+  await page.goto('https://www.saucedemo.com/');
 
-    await expect(page).toHaveTitle('Swag Labs');
+  await expect(page).toHaveTitle('Swag Labs');
 
-    const loginField = page.getByTestId('username');
-    
-    await loginField.fill('locked_out_user');
+  const loginField = page.getByTestId('username');
 
-    await page.getByPlaceholder('Password').fill('secret_sauce');
+  await loginField.fill('locked_out_user');
 
-    await page.getByRole('button', {name: 'login'}).click();
+  await page.getByPlaceholder('Password').fill('secret_sauce');
 
-    const loginErrorMessage = page.getByTestId('error');
-  
-    await expect(loginErrorMessage).toContainText('this user has been locked out');
-    
-    await expect(page).not.toHaveURL(/inventory/);
-    } 
-)
+  await page.getByRole('button', { name: 'login' }).click();
+
+  const loginErrorMessage = page.getByTestId('error');
+
+  await expect(loginErrorMessage).toContainText(
+    'this user has been locked out',
+  );
+
+  await expect(page).not.toHaveURL(/inventory/);
+});
