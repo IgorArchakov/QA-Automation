@@ -59,7 +59,7 @@ test('remove product from Cart', async ({ page }) => {
 
   const shoppingCart = page.getByTestId('shopping-cart-link');
 
-  //await testProductRemoveButton.click();
+  await testProductRemoveButton.click();
 
   await expect(
     shoppingCart.getByTestId('shopping-cart-badge'),
