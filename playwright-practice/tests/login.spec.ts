@@ -1,37 +1,24 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage.js';
 
 test('login to sauce', async ({ page }) => {
-  await page.goto('https://www.saucedemo.com/');
+  const loginPage = new LoginPage(page);
 
-  await expect(page).toHaveTitle('Swag Labs');
+  await loginPage.open();
 
-  const loginField = page.getByTestId('username');
-
-  await loginField.fill('standard_user');
-
-  await page.getByPlaceholder('Password').fill('secret_sauce');
-
-  await page.getByRole('button', { name: 'login' }).click();
+  await loginPage.login('standard_user', 'secret_sauce');
 
   await expect(page).toHaveURL(/inventory/);
 });
 
 test('blocked user login', async ({ page }) => {
-  await page.goto('https://www.saucedemo.com/');
+  const loginPage = new LoginPage(page);
 
-  await expect(page).toHaveTitle('Swag Labs');
+  await loginPage.open();
 
-  const loginField = page.getByTestId('username');
+  await loginPage.login('locked_out_user', 'secret_sauce');
 
-  await loginField.fill('locked_out_user');
-
-  await page.getByPlaceholder('Password').fill('secret_sauce');
-
-  await page.getByRole('button', { name: 'login' }).click();
-
-  const loginErrorMessage = page.getByTestId('error');
-
-  await expect(loginErrorMessage).toContainText(
+  await expect(loginPage.errorMessage).toContainText(
     'this user has been locked out',
   );
 
