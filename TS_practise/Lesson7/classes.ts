@@ -16,8 +16,6 @@ const bug = new Bug('CAR-12345');
 
 bug.close();
 console.log(bug.status);
-//bug.id = 'CAR-9999';
-//console.log(bug.id);
 
 const bug2 = new Bug('CAR-5464');
 console.log(bug2.status);
@@ -63,13 +61,3 @@ loginRunTest.addResult('failed');
 console.log(loginRunTest.results);
 console.log(loginRunTest.passRate());
 console.log(emptyRun.passRate());
-
-const loginRun: TestRun[] = [
-  new TestRun('Login'),
-  new TestRun('Login with Invalid User'),
-  new TestRun('Login with Blocked User'),
-  new TestRun('Login with Admin'),
-  new TestRun('Login without password'),
-];
-
-//loginRun.addResult('passed');
