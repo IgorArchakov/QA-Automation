@@ -1,71 +1,47 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage.js';
+import { InventoryPage } from '../pages/InventoryPage.js';
 
 //preconditioned steps
 test.beforeEach(async ({ page }) => {
-  await page.goto('https://www.saucedemo.com/');
+  const loginPage = new LoginPage(page);
 
-  await expect(page).toHaveTitle('Swag Labs');
+  await loginPage.open();
 
-  const loginField = page.getByTestId('username');
-
-  await loginField.fill('standard_user');
-
-  await page.getByPlaceholder('Password').fill('secret_sauce');
-
-  await page.getByRole('button', { name: 'login' }).click();
+  await loginPage.login('standard_user', 'secret_sauce');
 
   await expect(page).toHaveURL(/inventory/);
 });
 
 //tests
 test('add product to Cart', async ({ page }) => {
-  await expect(page.getByTestId('inventory-item')).toHaveCount(6);
+  const inventoryPage = new InventoryPage(page);
 
-  const testProductBackpack = page
-    .getByTestId('inventory-item-description')
-    .filter({ hasText: 'Sauce Labs Backpack' });
+  await inventoryPage.checkInventoryPage();
 
-  const testProductAddButton = testProductBackpack.getByRole('button', {
-    name: 'Add to cart',
-  });
+  await inventoryPage.addProduct('Sauce Labs Backpack');
 
-  await testProductAddButton.click();
+  await expect(inventoryPage.header.productCounter).toHaveText('1');
 
-  const shoppingCart = page.getByTestId('shopping-cart-link');
-
-  await expect(shoppingCart.getByTestId('shopping-cart-badge')).toHaveText('1');
-
-  const testProductRemoveButton = testProductBackpack.getByRole('button', {
-    name: 'Remove',
-  });
-
-  await expect(testProductRemoveButton).toBeVisible();
+  await expect(inventoryPage.removeButton('Sauce Labs Backpack')).toBeVisible();
 });
 
 test('remove product from Cart', async ({ page }) => {
-  const testProductBackpack = page
-    .getByTestId('inventory-item-description')
-    .filter({ hasText: 'Sauce Labs Backpack' });
+  const inventoryPage = new InventoryPage(page);
 
-  const testProductAddButton = testProductBackpack.getByRole('button', {
-    name: 'Add to cart',
-  });
+  await inventoryPage.checkInventoryPage();
 
-  await testProductAddButton.click();
+  await inventoryPage.addProduct('Sauce Labs Backpack');
 
-  const testProductRemoveButton = testProductBackpack.getByRole('button', {
-    name: 'Remove',
-  });
+  await expect(inventoryPage.header.productCounter).toHaveText('1');
 
-  const shoppingCart = page.getByTestId('shopping-cart-link');
+  await inventoryPage.removeProduct('Sauce Labs Backpack');
 
-  await testProductRemoveButton.click();
+  await expect(inventoryPage.header.productCounter).not.toBeVisible();
 
   await expect(
-    shoppingCart.getByTestId('shopping-cart-badge'),
+    inventoryPage.removeButton('Sauce Labs Backpack'),
   ).not.toBeVisible();
 
-  await expect(testProductRemoveButton).not.toBeVisible();
-
-  await expect(testProductAddButton).toBeVisible();
+  await expect(inventoryPage.addButton('Sauce Labs Backpack')).toBeVisible();
 });
