@@ -1,19 +1,14 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage.js';
+import { test, expect } from '../fixtures/fixtures.js';
 
-test('login to sauce', async ({ page }) => {
-  const loginPage = new LoginPage(page);
-
+test('login to sauce', async ({ loginPage }) => {
   await loginPage.open();
 
   await loginPage.login('standard_user', 'secret_sauce');
 
-  await expect(page).toHaveURL(/inventory/);
+  await expect(loginPage.page).toHaveURL(/inventory/);
 });
 
-test('blocked user login', async ({ page }) => {
-  const loginPage = new LoginPage(page);
-
+test('blocked user login', async ({ loginPage }) => {
   await loginPage.open();
 
   await loginPage.login('locked_out_user', 'secret_sauce');
@@ -22,5 +17,5 @@ test('blocked user login', async ({ page }) => {
     'this user has been locked out',
   );
 
-  await expect(page).not.toHaveURL(/inventory/);
+  await expect(loginPage.page).not.toHaveURL(/inventory/);
 });
