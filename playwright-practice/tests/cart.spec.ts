@@ -1,11 +1,8 @@
 import { test, expect } from '../fixtures/fixtures.js';
 
 //preconditioned steps
-test.beforeEach(async ({ page, loginPage }) => {
-  await loginPage.open();
-
-  await loginPage.login('standard_user', 'secret_sauce');
-  await expect(page).toHaveURL(/inventory/);
+test.beforeEach(async ({ inventoryPage }) => {
+  await inventoryPage.open();
 });
 
 //tests

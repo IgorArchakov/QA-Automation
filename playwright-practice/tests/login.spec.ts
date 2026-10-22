@@ -1,5 +1,7 @@
 import { test, expect } from '../fixtures/fixtures.js';
 
+test.use({ storageState: { cookies: [], origins: [] } });
+
 test('login to sauce', async ({ loginPage }) => {
   await loginPage.open();
 

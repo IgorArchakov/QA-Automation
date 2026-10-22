@@ -11,7 +11,9 @@ export class InventoryPage {
     this.header = new Header(page);
     this.itemContainers = page.getByTestId('inventory-item-description');
   }
-
+  async open() {
+    await this.page.goto('/inventory.html');
+  }
   async checkInventoryPage() {
     await expect(this.page).toHaveURL(/inventory/);
     await expect(this.header.secondaryHeader).toHaveText(/Products/);
