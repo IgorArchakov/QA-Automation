@@ -42,7 +42,15 @@ export default defineConfig({
       testMatch: /.*\.setup\.ts/,
     },
     {
+      name: 'api',
+      testMatch: /\/apitests\//,
+      use: {
+        baseURL: 'https://restful-booker.herokuapp.com',
+      },
+    },
+    {
       name: 'chromium',
+      testIgnore: /\/apitests\//,
       use: {
         ...devices['Desktop Chrome'],
         // Use prepared auth state.
@@ -53,6 +61,7 @@ export default defineConfig({
 
     {
       name: 'firefox',
+      testIgnore: /\/apitests\//,
       use: {
         ...devices['Desktop Firefox'],
         storageState: 'playwright/.auth/user.json',
@@ -62,6 +71,7 @@ export default defineConfig({
 
     {
       name: 'webkit',
+      testIgnore: /\/apitests\//,
       use: {
         ...devices['Desktop Safari'],
         storageState: 'playwright/.auth/user.json',
