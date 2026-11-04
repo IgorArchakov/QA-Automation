@@ -1,12 +1,30 @@
 import { test as base, expect } from '@playwright/test';
+import { type Booking, createBooking } from '../api/booking.js';
 
-//login token
+//types listing for worker-scope fixture (for many tests)
 type ApiWorkerFixtures = {
   authToken: string;
 };
+//types listing for test-scope fixture
+type ApiTestFixtures = {
+  booking: Booking;
+};
 
-// Note that we pass worker fixture types as a second template parameter.
-export const test = base.extend<{}, ApiWorkerFixtures>({
+//fixtures
+export const test = base.extend<ApiTestFixtures, ApiWorkerFixtures>({
+  // test fixture = name: function
+  booking: async ({ request, authToken }, use) => {
+    const booking = await createBooking(request);
+    await use(booking);
+    const deleteResponse = await request.delete(
+      `/booking/${booking.bookingId}`,
+      {
+        headers: { Cookie: `token=${authToken}` },
+      },
+    );
+    expect(deleteResponse.status()).toEqual(201);
+  },
+  // worker fixture = name: array function, scope in the end
   authToken: [
     async ({ playwright }, use) => {
       // 1. create own request context
