@@ -12,6 +12,8 @@ export type BookingData = {
   additionalneeds: string;
 };
 
+export type OverrideBookingData = Partial<BookingData>;
+
 export type Booking = {
   bookingId: number;
   data: BookingData;
@@ -19,6 +21,7 @@ export type Booking = {
 
 export async function createBooking(
   request: APIRequestContext,
+  overrides?: OverrideBookingData,
 ): Promise<Booking> {
   const bookingData: BookingData = {
     firstname: `IhorTest${Date.now()}`,
@@ -30,7 +33,9 @@ export async function createBooking(
       checkout: '2020-09-25',
     },
     additionalneeds: 'Test Additional Need',
+    ...overrides,
   };
+
   const createResponse = await request.post('/booking', {
     data: bookingData,
   });
